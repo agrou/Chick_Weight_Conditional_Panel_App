@@ -24,40 +24,40 @@ shinyServer(function(input, output, session) {
         })
         
         output$rawtable <- DT::renderDataTable(DT::datatable({
+                
                 data <- CW
                 
-                # if(!('All' %in% input$ShowID)){
-                #         data <- data %>% 
-                #                 filter(between(Weight, input$rangeWgt[1], input$rangeWgt[2])) %>%
-                #                 filter(Chick %in% input$chick) 
-                #                 
-                # } else if (input$ShowID == 'All'){
-                #         
-                #         data <- data %>% 
-                #                 filter(between(Weight, input$rangeWgt[1], input$rangeWgt[2]))
-                # 
-                #         } else {
+        
+                # 1. First controler: Select chicken ID
+                if(input$ShowID == 'All')
                 
-                # if(!('All' %in% input$ShowDiet)){
-                #         data <- data %>%
-                #                 filter(between(Weight, input$rangeWgt[1], input$rangeWgt[2])) %>%
-                #                 filter(Diet %in% input$diet)
-                #                 
-                # }
-                # 
-                # if(!('All' %in% input$ShowTime)){
-                #         data <- data %>%
-                #                 filter(between(Weight, input$rangeWgt[1], input$rangeWgt[2])) %>%
-                #                 filter(Time %in% input$time)
-                #         
-                # }
-
-                data %>% 
-                        filter(between(Weight, input$rangeWgt[1], input$rangeWgt[2])) %>%
-                        filter(Diet %in% input$diet) %>% 
-                        filter(Time %in% input$time) %>% 
-                        arrange(Chick, Diet, Time)
-                #}
+                        data <- CW 
+                
+                else if(input$ShowID == 'chick') 
+               
+                        data <- CW %>%
+                                filter(Chick %in% input$chick) 
+                
+                # 2. Second controler: Select diet 
+                
+                if(input$ShowDiet == 'All')
+                        data <- CW %>%
+                                filter(Chick %in% input$chick)
+                else if(input$ShowDiet == 'diet' && input$ShowID == 'All')
+                        data <- CW %>%
+                                filter(Diet %in% input$diet)
+                else if(input$ShowDiet == 'diet' && input$ShowID == 'chick')
+                        data <- CW %>%
+                                filter(Chick %in% input$chick) %>%
+                                filter(Diet %in% input$diet)
+                
+                # 3. Third controler: Select time
+                
+                # code will be added here
+                
+                # 4. Fourth controler: Select range
+                
+                # code will be added here
                
         },  style = "default", rownames = FALSE, options = list(pageLength = 15)))
         

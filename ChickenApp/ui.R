@@ -64,6 +64,7 @@ shinyUI(dashboardPage(
                                             conditionalPanel(
                                                     "input.ShowTime == 'time'",
                                                     uiOutput("timeUi")
+                                                  
                                             ),
                                             
                                             sliderInput("rangeWgt", "Weight Range:",
