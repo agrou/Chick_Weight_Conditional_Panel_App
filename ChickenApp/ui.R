@@ -28,9 +28,9 @@ shinyUI(dashboardPage(
                         menuItem("Raw data", tabName = "Rawdata",
                                  icon = icon("balance-scale", lib = "font-awesome")),
                         menuItem("Summary Stats", tabName = "SummaryStats",
-                                 icon = icon("table", lib = "font-awesome")),
-                        menuItem("Graphs", tabName = "Graphs", 
-                                 icon = icon("stats", lib = "glyphicon"))
+                                 icon = icon("table", lib = "font-awesome"))
+                        # menuItem("Graphs", tabName = "Graphs", 
+                        #          icon = icon("stats", lib = "glyphicon"))
                 )
         ), 
         dashboardBody(
@@ -73,22 +73,47 @@ shinyUI(dashboardPage(
                                             ),
                                         #),
                                 #fluidRow(
-                                        box(width = 8,
+                                        
+                                box(width = 8,
                                         title = "Table",
                                         DT::dataTableOutput("rawtable")
                                         )),
+                                # box(width = 12,
+                                #     title = "Chicken Weight over time",
+                                #     plotOutput("rawplot"))),
                                 #),
 
                         tabItem(tabName = "SummaryStats",
                                 
                                 fluidRow(
-                                        box(title = "Summary Table",
-                                                dataTableOutput("Chick_table")),
-                                        box(title = "Summary Plot",
-                                                plotOutput("Chick_plot"))
+                                        box(width = 12, title = "Table and plot options:",
+                                            selectizeInput("SumDiet", label = "Diet",
+                                                           choices = as.factor(CW$Diet), 
+                                                           multiple = TRUE, 
+                                                           selected = "Diet 1"),
+                                            selectizeInput("SumTime", label = "Time",
+                                                           choices = as.factor(CW$Time),
+                                                           multiple = TRUE, 
+                                                           selected = c("0", "2"))),
+                                        box(width = 12, title = "Summary Table",
+                                                dataTableOutput("sumtable")),
+                                        box(width = 12, title = "Plot options",
+                                            radioButtons("plotType", 
+                                                         "Plot type:",
+                                                         choices = c("All diets in one plot", "Plot diets separately"), 
+                                                         selected = c("Plot diets separately"), 
+                                                         inline = FALSE),
+                                            
+                                            checkboxGroupInput("plotShow",
+                                                               label = "Show:",
+                                                               choices = c("Scatter Plot", "Mean Lines", "Box-Whisker Plot"),
+                                                               selected = c("Scatter Plot", "Mean Lines")
+                                            )),
+                                        box(width = 12, title = "Summary Plot",
+                                                plotOutput("sumplot"))
 
-                                )),
-                        tabItem(tabName = "Graphs")#,
+                                ))
+                        #tabItem(tabName = "Graphs")#,
                         #tabItem("About")
                 )
          )
