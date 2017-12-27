@@ -6,3 +6,7 @@ To run `ChickWeight` app, run the following code in R console:
 
 shiny::runGitHub("Chick_Weight_Conditional_Panel_App", "agrou", subdir = "ChickenApp")
 
+![](https://github.com/agrou/Chick_Weight_Conditional_Panel_App/blob/master/ChickenApp/www/CW_screenshot.png?raw=true)
+
+
+
