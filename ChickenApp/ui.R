@@ -90,11 +90,11 @@ shinyUI(dashboardPage(
                                             selectizeInput("SumDiet", label = "Diet",
                                                            choices = as.factor(CW$Diet), 
                                                            multiple = TRUE, 
-                                                           selected = "Diet 1"),
+                                                           selected = c("Diet 1", "Diet 2", "Diet 3")),
                                             selectizeInput("SumTime", label = "Time",
                                                            choices = as.factor(CW$Time),
                                                            multiple = TRUE, 
-                                                           selected = c("0", "2"))),
+                                                           selected = c("0", "2", "4", "6", "8"))),
                                         box(width = 12, title = "Summary Table",
                                                 dataTableOutput("sumtable")),
                                         box(width = 12, title = "Plot options",
@@ -110,7 +110,7 @@ shinyUI(dashboardPage(
                                                                selected = c("Scatter Plot", "Mean Lines")
                                             )),
                                         box(width = 12, title = "Summary Plot",
-                                                plotOutput("sumplot"))
+                                                plotlyOutput("sumplot"))
 
                                 ))
                         #tabItem(tabName = "Graphs")#,

@@ -91,22 +91,51 @@ shinyServer(function(input, output, session) {
         style = "default", rownames = FALSE, options = list(pageLength = 15))
         %>% DT::formatRound(c('Mean', 'SD', 'Median'), digits = c(1, 2, 1)))
         
-        output$sumplot <- renderPlot({
+        output$sumplot <- renderPlotly({
                 
                 CW_dat <- CW %>%
                         filter(Diet %in% input$SumDiet) %>%
-                        filter(Time %in% input$SumTime)
-                
-                CWplot <- ggplot(CW_dat, aes(Time, Weight, colour = Diet)) +
+                        filter(Time %in% input$SumTime) %>%
+                        ggplot(., aes(Time, Weight, colour = Diet, text = paste("Chick:", Chick))) +
                         scale_x_continuous(breaks=unique(CW$Time)) +
                         scale_y_continuous(breaks=seq(50, 350, by = 50)) +
+                        scale_colour_tableau() +
+                        theme_hc() +
                         xlab("Time (days)") + 
-                        ylab("Weight (grams)") +
-                        facet_wrap(~Diet) +
-                        #theme(legend.position = "none") + 
-                        geom_boxplot(aes(group=interaction(Time, Diet))) 
+                        ylab("Weight (grams)") 
                 
-                CWplot
+                if("Plot diets separately" %in% input$plotType) {
+                        
+                CWplot <- CW_dat +
+                        facet_wrap(~Diet) +
+                        theme(legend.position = "none") #+ 
+                        #geom_boxplot(aes(group=interaction(Time, Diet))) 
+                
+                } else {
+                        CWplot <- CW_dat + theme(legend.position = "bottom")
+                
+                }
+                
+                if("Box-Whisker Plot" %in% input$plotShow){
+                        
+                        CWplot <- CWplot +
+                                # use interaction to combine two variables into a new factor
+                                geom_boxplot(aes(group=interaction(Time, Diet))) 
+                }
+                 if("Scatter Plot" %in% input$plotShow){
+                         
+                         CWplot <- CWplot + geom_jitter(size = .4)
+                 }
+                 if("Mean Lines" %in% input$plotShow){
+                         
+                         CWplot <- CWplot + stat_summary(fun.y = "mean", 
+                                                         geom = "line",
+                                                         aes(group = Diet), size = 1)
+                 }
+                
+                 CWplot <- ggplotly(CWplot)
+        CWplot
+   
         })
         
 }

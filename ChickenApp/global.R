@@ -2,6 +2,8 @@ library(shinydashboard)
 library(tidyverse)
 library(DT)
 library(stringr)
+library(ggthemes)
+library(plotly)
 
 #load("Chick_base.RData", envir = .GlobalEnv)
 
