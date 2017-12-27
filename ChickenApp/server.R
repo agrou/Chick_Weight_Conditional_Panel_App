@@ -3,6 +3,7 @@ shinyServer(function(input, output, session) {
         
         ## Raw data tab
         # output conditional panels for conditional user selection
+        
         output$chickUi <- renderUI({
                 selectizeInput("chick", "", 
                                as.factor(CW$Chick), selected = 1,
@@ -17,6 +18,20 @@ shinyServer(function(input, output, session) {
                                options = list(placeholder = "Select diet"))
         })
         
+        output$dietIDUi <- renderUI({
+                selectizeInput("dietID", "",
+                               as.factor(CW$Diet), selected = NULL,
+                               multiple = TRUE,
+                               options = list(placeholder = "Select diet"))
+        })
+        
+        output$timeIDUi <- renderUI({
+                selectizeInput("timeID", "",
+                               as.factor(CW$Time), selected = NULL,
+                               multiple = TRUE,
+                               options = list(placeholder = "Select time"))
+        })
+        
         output$timeUi <- renderUI({
                 selectizeInput("time", "",
                                as.factor(CW$Time), selected = NULL,
@@ -24,7 +39,7 @@ shinyServer(function(input, output, session) {
                                options = list(placehoder = "Select time"))
         })
         
-        output$rawtable <- DT::renderDataTable(DT::datatable({
+        output$Chicktable <- DT::renderDataTable(DT::datatable({
                 
                 data <- CW
                 
@@ -60,7 +75,7 @@ shinyServer(function(input, output, session) {
                                 filter(between(Weight, input$rangeWgt[1], input$rangeWgt[2])) %>%
                                 filter(Time %in% input$time)
                 
-                
+        
                 
         },  style = "default", rownames = FALSE, options = list(pageLength = 15)))
         
@@ -83,10 +98,33 @@ shinyServer(function(input, output, session) {
         ## Summaries tab
         
         output$sumtable <- DT::renderDataTable(DT::datatable({
+                
                 data <- CW_sum_stats %>%
-                        filter(Diet %in% input$SumDiet) %>%
-                        filter(Time %in% input$SumTime) %>%
+                        filter(Diet %in% input$dietID) %>%
+                        filter(Time %in% input$timeID) %>%
                         arrange(Diet, Time)
+                
+                if(input$DietID == 'All' && input$TimeID == 'All')
+                        
+                        data <- CW_sum_stats 
+                
+                else if(input$TimeID == 'timeID' && input$DietID == 'dietID')
+                        
+                        CW_sum_stats %>%
+                                filter(Diet %in% input$dietID) %>%
+                                filter(Time %in% input$timeID)
+                
+                
+                else if(input$DietID == 'dietID')
+                        
+                        CW_sum_stats %>%
+                                filter(Diet %in% input$dietID)
+                
+                else if(input$TimeID == 'timeID')
+                        
+                        CW_sum_stats %>%
+                                filter(Time %in% input$timeID)
+           
         },
         style = "default", rownames = FALSE, options = list(pageLength = 15))
         %>% DT::formatRound(c('Mean', 'SD', 'Median'), digits = c(1, 2, 1)))
@@ -94,8 +132,8 @@ shinyServer(function(input, output, session) {
         output$sumplot <- renderPlotly({
                 
                 CW_dat <- CW %>%
-                        filter(Diet %in% input$SumDiet) %>%
-                        filter(Time %in% input$SumTime) %>%
+                        filter(Diet %in% input$dietID) %>%
+                        filter(Time %in% input$timeID) %>%
                         ggplot(., aes(Time, Weight, colour = Diet, text = paste("Chick:", Chick))) +
                         scale_x_continuous(breaks=unique(CW$Time)) +
                         scale_y_continuous(breaks=seq(50, 350, by = 50)) +
@@ -104,6 +142,17 @@ shinyServer(function(input, output, session) {
                         xlab("Time (days)") + 
                         ylab("Weight (grams)") 
                 
+                if(input$DietID == 'All' && input$TimeID == 'All')
+                        
+                        CW_dat <- CW %>%
+                                ggplot(., aes(Time, Weight, colour = Diet, text = paste("Chick:", Chick))) +
+                                scale_x_continuous(breaks=unique(CW$Time)) +
+                                scale_y_continuous(breaks=seq(50, 350, by = 50)) +
+                                scale_colour_tableau() +
+                                theme_hc() +
+                                xlab("Time (days)") + 
+                                ylab("Weight (grams)") 
+                        
                 if("Plot diets separately" %in% input$plotType) {
                         
                 CWplot <- CW_dat +
