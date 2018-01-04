@@ -20,113 +20,134 @@
 shinyUI(dashboardPage(
          skin = "black",
          
-         dashboardHeader(title = "Chicken Weight Data Summaries", titleWidth = 320),
+         dashboardHeader(title = "Chicken Weight Data Summaries", titleWidth = 250),
       
-         dashboardSidebar(width = 320,
-                sidebarMenu(
-                        img(src='chicken-8.jpg', width = '320px'),
-                        
-                        # selectizeInput("AppID", label = "DataVis options",
-                        #                choices = c("Raw data" = "Rawdata", 
-                        #                            "Sumary Stats" = "stats", 
-                        #                            "About" = "about")),
-                        
-                        
-                        menuItem("Raw data", tabName = 'Raw data', 
-                                 icon = icon('table'),
-                                
-                        selectizeInput("ShowID", label = "Chick ID",
-                                       choices = c("Show all" = "All",
-                                                   "Select chick" = "chick"), 
-                                       selected = "All"),
-                        conditionalPanel(
-                                "input.ShowID == 'chick'",
-                                uiOutput("chickUi")
-                        ),
-                        sliderInput("rangeWgt", "Weight Range:",
-                                    min = rWgt[1], max = rWgt[2],
-                                    value = c(rWgt[1], rWgt[2])),
-                        
-                        selectizeInput("ShowDiet", label = "Diet",
-                                       choices = c("Show all" = "All",
-                                                   "Select diet" = "diet"),
-                                       selected = "All"),
-                        conditionalPanel(
-                                "input.ShowDiet == 'diet'",
-                                uiOutput("dietUi")
-                        ),
-                        
-                        selectizeInput("ShowTime",
-                                       label = "Time (days)",
-                                       choices = c("Show all" = "All",
-                                                   "Select time" = "time"),
-                                       selected = "All"),
-                        conditionalPanel(
-                                "input.ShowTime == 'time'",
-                                uiOutput("timeUi")
-                                
-                        )),
-                        
-                         menuItem("Data Summaries", tabName = "Data Summaries", 
-                                 icon = icon('stats', lib = "glyphicon"),
-                                  
-                                 selectizeInput("DietID", label = "Diet",
-                                                choices = c("Show all" = "All",
-                                                            "Select diet" = "dietID"),
-                                                selected = "All"),
-                                 conditionalPanel(
-                                         "input.DietID == 'dietID'",
-                                         uiOutput("dietIDUi")
-                                 ),
-                                 selectizeInput("TimeID",
-                                                label = "Time (days)",
-                                                choices = c("Show all" = "All",
-                                                            "Select time" = "timeID"),
-                                                selected = "All"),
-                                 conditionalPanel(
-                                         "input.TimeID == 'timeID'",
-                                         uiOutput("timeIDUi")
+         dashboardSidebar(width = 250,
+                sidebarMenu(id = "tabs",
+                            
+                        img(src='chicken-8.jpg', width = '250px'),
+                        menuItem("Raw data", tabName = "RawData", startExpanded = FALSE, 
+                                 icon = icon('table')),
+                        conditionalPanel("input.tabs === 'RawData'",
+                                         selectizeInput("ShowID", label = "Chick ID",
+                                                        choices = c("Show all" = "All",
+                                                                    "Select chick" = "chick"),
+                                                        selected = "All"),
+                                         conditionalPanel(
+                                                 "input.ShowID == 'chick'",
+                                                 uiOutput("chickUi")
+                                         ),
+                                         sliderInput("rangeWgt", "Weight Range:",
+                                                     min = rWgt[1], max = rWgt[2],
+                                                     value = c(rWgt[1], rWgt[2])),
                                          
-                                 )),
-                                 
-                        # 
-                         menuItem("About", tabName = 'About', icon = icon('book'))
-                        
-                        
+                                         selectizeInput("ShowDiet", label = "Diet",
+                                                        choices = c("Show all" = "All",
+                                                                    "Select diet" = "diet"),
+                                                        selected = "All"),
+                                         conditionalPanel(
+                                                 "input.ShowDiet == 'diet'",
+                                                 uiOutput("dietUi")
+                                         ),
+                                         
+                                         selectizeInput("ShowTime",
+                                                        label = "Time (days)",
+                                                        choices = c("Show all" = "All",
+                                                                    "Select time" = "time"),
+                                                        selected = "All"),
+                                         conditionalPanel(
+                                                 "input.ShowTime == 'time'",
+                                                 uiOutput("timeUi"))
+                        ),
+                        menuItem("Data Summaries", tabName = "DataSummaries", icon = icon('stats', lib = "glyphicon")),
+                        conditionalPanel("input.tabs === 'DataSummaries'",
+                                         selectizeInput("DietID", label = "Diet",
+                                                        choices = c("Show all" = "All",
+                                                                    "Select diet" = "dietID"),
+                                                        selected = "All"),
+                                         conditionalPanel(
+                                                 "input.DietID == 'dietID'",
+                                                 uiOutput("dietIDUi")
+                                         ),
+                                         selectizeInput("TimeID",
+                                                        label = "Time (days)",
+                                                        choices = c("Show all" = "All",
+                                                                    "Select time" = "timeID"),
+                                                        selected = "All"),
+                                         conditionalPanel(
+                                                 "input.TimeID == 'timeID'",
+                                                 uiOutput("timeIDUi"))
+                                                 
+                                         ),
+                        menuItem("About", tabName = "About",
+                                icon = icon('book'))
+
                 )
         ), 
         dashboardBody(
-               fluidRow(
-                       tabBox(
-                              
-                               width = 12, height = "1000px", 
-                               title = tagList(shiny::icon("balance-scale", 
-                                                           lib = "font-awesome"), 
-                                               strong("Explore Chicken Weight data")),
-                               br(),
-                               box(width = 12, title = "Raw Data", collapsible = TRUE,
-                                   collapsed = TRUE,
-                                   DT::dataTableOutput("Chicktable")),
-                               box(width = 12, title = "Data Summaries", collapsible = TRUE, 
-                                   collapsed = TRUE, 
-                                   dataTableOutput("sumtable")), 
-                               box(width = 4, title = "Plot options", 
-                                   radioButtons("plotType", "Plot type:", 
-                                                choices = c("All diets in one plot", "Plot diets separately"), 
-                                                selected = c("All diets in one plot"),
-                                                                        inline = FALSE), 
-                                   checkboxGroupInput("plotShow", label = "Show:", 
-                                                      choices = c("Scatter Plot", "Mean Lines", "Box-Whisker Plot"), 
-                                                      selected = c("Scatter Plot", "Mean Lines")
-                                                                                    )),
+               #fluidRow(
+                tabItems(
+                        tabItem(tabName = "RawData", 
+                                fluidRow(
+                                        box(width = 12,
+                                        br(), h3(strong("Chicken data: Raw data")), br(),
+                                        DT::dataTableOutput("Chicktable")))
+                                ),
+                        tabItem(tabName = "DataSummaries",
+                                br(),
+                                box(width = 12, title = "Data Summaries", collapsible = TRUE, 
+                                    collapsed = TRUE, 
+                                    dataTableOutput("sumtable")), 
+                                box(width = 4, title = "Plot options", 
+                                    radioButtons("plotType", "Plot type:", 
+                                                 choices = c("All diets in one plot", "Plot diets separately"), 
+                                                 selected = c("All diets in one plot"),
+                                                 inline = FALSE), 
+                                    checkboxGroupInput("plotShow", label = "Show:", 
+                                                       choices = c("Scatter Plot", "Mean Lines", "Box-Whisker Plot"), 
+                                                       selected = c("Scatter Plot", "Mean Lines")
+                                    )),
                                 box(width = 8, title = "Summary Plot", plotlyOutput("sumplot"))
-                                                                        )
+                        
+                        ),
+                        tabItem(tabName = "About", box(p("text here"))))
+                       # tabBox(
+                       #         width = 12, height = "1000px", 
+                       #         title = tagList(shiny::icon("balance-scale", 
+                       #                                      lib = "font-awesome"), 
+                       #                         strong("Explore Chicken Weight data")),
+                       #         br(),
+                #tabsetPanel(
+                               #tabPanel(
+                                      # "Raw Data", br(), h3(strong("Chicken data: Raw data")), br(),
+                                      #  DT::dataTableOutput("Chicktable")),
+                                #tabPanel(
+                                       # "Data Summaries", br(),
+                                       #         box(width = 12, title = "Data Summaries", collapsible = TRUE, 
+                                       #                                         collapsed = TRUE, 
+                                       #                                         dataTableOutput("sumtable")), 
+                                       #         box(width = 4, title = "Plot options", 
+                                       #             radioButtons("plotType", "Plot type:", 
+                                       #                          choices = c("All diets in one plot", "Plot diets separately"), 
+                                       #                          selected = c("All diets in one plot"),
+                                       #                          inline = FALSE), 
+                                       #             checkboxGroupInput("plotShow", label = "Show:", 
+                                       #                                choices = c("Scatter Plot", "Mean Lines", "Box-Whisker Plot"), 
+                                       #                                selected = c("Scatter Plot", "Mean Lines")
+                                       #             )),
+                                       #         box(width = 8, title = "Summary Plot", plotlyOutput("sumplot"))
+                                       # ),
+                              # tabPanel("About", p("text here")))
+        #))
+                               
+                               
                         #tabPanel(tagList(icon("book", 
                                               #                       lib = "font-awesome"),
                                               #                  "About"))
                                                                         
-                                                       ))
+                                                       
                                         
+)
 )
 )
 
