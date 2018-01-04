@@ -90,7 +90,7 @@ shinyUI(dashboardPage(
                         tabItem(tabName = "RawData", 
                                 fluidRow(
                                         box(width = 12,
-                                        br(), h3(strong("Chicken data: Raw data")), br(),
+                                        br(), h3(icon("balance-scale", lib = "font-awesome"), strong("Explore Chick Weight data")), br(),
                                         DT::dataTableOutput("Chicktable")))
                                 ),
                         tabItem(tabName = "DataSummaries",
@@ -112,9 +112,9 @@ shinyUI(dashboardPage(
                         ),
                         tabItem(tabName = "About", box(p("text here"))))
                        # tabBox(
-                       #         width = 12, height = "1000px", 
-                       #         title = tagList(shiny::icon("balance-scale", 
-                       #                                      lib = "font-awesome"), 
+                       #         width = 12, height = "1000px",
+                       #         title = tagList(shiny::icon("balance-scale",
+                       #                                      lib = "font-awesome"),
                        #                         strong("Explore Chicken Weight data")),
                        #         br(),
                 #tabsetPanel(
