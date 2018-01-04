@@ -79,21 +79,7 @@ shinyServer(function(input, output, session) {
                 
         },  style = "default", rownames = FALSE, options = list(pageLength = 15)))
         
-        # output$rawplot <- renderPlot({
-        #         
-        #         #if(input$ShowID == 'All')
-        #                 
-        #         ggplot(CW, aes(Time, Weight, colour = Diet)) +
-        #                         scale_x_continuous(breaks=unique(CW$Time)) +
-        #                         scale_y_continuous(breaks=seq(50, 350, by = 50)) +
-        #                         xlab("Time (days)") + 
-        #                         ylab("Weight (grams)") +
-        #                         #facet_wrap(~Diet) +
-        #                         #theme(legend.position = "none") + 
-        #                         geom_jitter(size = .4)
-                
-                
-        #})
+        
         
         ## Summaries tab
         
@@ -187,80 +173,11 @@ shinyServer(function(input, output, session) {
    
         })
         
-        # output$menu <- renderMenu({
-        #         sidebarMenu(
-        # 
-        #         menuItem("Raw data", tabName = 'Rawdata',
-        #                  icon = icon('table'),
-        # 
-        #                  selectizeInput("ShowID", label = "Chick ID",
-        #                                 choices = c("Show all" = "All",
-        #                                             "Select chick" = "chick"),
-        #                                 selected = "All"),
-        #                  conditionalPanel(
-        #                          "input.ShowID == 'chick'",
-        #                          uiOutput("chickUi")
-        #                  ),
-        #                  sliderInput("rangeWgt", "Weight Range:",
-        #                              min = rWgt[1], max = rWgt[2],
-        #                              value = c(rWgt[1], rWgt[2])),
-        # 
-        #                  selectizeInput("ShowDiet", label = "Diet",
-        #                                 choices = c("Show all" = "All",
-        #                                             "Select diet" = "diet"),
-        #                                 selected = "All"),
-        #                  conditionalPanel(
-        #                          "input.ShowDiet == 'diet'",
-        #                          uiOutput("dietUi")
-        #                  ),
-        # 
-        #                  selectizeInput("ShowTime",
-        #                                 label = "Time (days)",
-        #                                 choices = c("Show all" = "All",
-        #                                             "Select time" = "time"),
-        #                                 selected = "All"),
-        #                  conditionalPanel(
-        #                          "input.ShowTime == 'time'",
-        #                          uiOutput("timeUi")
-        # 
-        #                  )),
+        #  R Help for the Chick Weight Data
+        output$RHelp <- renderText(
+                paste(br(), tags$pre("help(ChickWeight)"), p(" "), helpCW)
+        )
 
-                #menuItem("Data Summaries", tabName = "DataSummaries",
-                         #icon = icon('stats', lib = "glyphicon"),
-
-                         # selectizeInput("DietID", label = "Diet",
-                         #                choices = c("Show all" = "All",
-                         #                            "Select diet" = "dietID"),
-                         #                selected = "All"),
-                         # conditionalPanel(
-                         #         "input.DietID == 'dietID'",
-                         #         uiOutput("dietIDUi")
-                         # ),
-                         # selectizeInput("TimeID",
-                         #                label = "Time (days)",
-                         #                choices = c("Show all" = "All",
-                         #                            "Select time" = "timeID"),
-                         #                selected = "All"),
-                         # conditionalPanel(
-                         #         "input.TimeID == 'timeID'",
-                         #         uiOutput("timeIDUi")
-                         # 
-                         # )),
-
-                #
-                # menuItem("About", tabName = 'About', icon = icon('book'))
-
-
-        #)
-
-        #})
-
-        #isolate({updateTabItems(session, "tabs", "Data Summaries")})
-
-        # observeEvent(input$tabset1,{
-        #
-        # })
-        
 }
 )
 

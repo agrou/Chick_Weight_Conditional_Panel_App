@@ -43,5 +43,16 @@ CW_stats_new <- CW_sum_stats %>%
         arrange(Time)
         
         
+# Create HTML Version of ChickWeight help page
+# From: https://stackoverflow.com/questions/8918753/r-help-page-as-object
 
+getHTMLhelp <- function(...){
+        thefile <- help(...)
+        capture.output(
+                tools:::Rd2HTML(utils:::.getHelpFile(thefile))
+        )
+}
+
+helpCW <- getHTMLhelp(ChickWeight) %>% 
+        paste(collapse = " ")
         

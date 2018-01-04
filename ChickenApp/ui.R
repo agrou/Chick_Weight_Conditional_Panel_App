@@ -20,7 +20,7 @@
 shinyUI(dashboardPage(
          skin = "black",
          
-         dashboardHeader(title = "Chicken Weight Data Summaries", titleWidth = 250),
+         dashboardHeader(title = "Chicken Weight App", titleWidth = 250),
       
          dashboardSidebar(width = 250,
                 sidebarMenu(id = "tabs",
@@ -79,7 +79,7 @@ shinyUI(dashboardPage(
                                                  uiOutput("timeIDUi"))
                                                  
                                          ),
-                        menuItem("About", tabName = "About",
+                        menuItem("Help", tabName = "Rhelp",
                                 icon = icon('book'))
 
                 )
@@ -90,13 +90,18 @@ shinyUI(dashboardPage(
                         tabItem(tabName = "RawData", 
                                 fluidRow(
                                         box(width = 12,
-                                        br(), h3(icon("balance-scale", lib = "font-awesome"), strong("Explore Chick Weight data")), br(),
+                                        h3(icon("balance-scale", lib = "font-awesome"), 
+                                           strong("Explore Chick Weight data"), 
+                                           align = "center"), br(), br(),
                                         DT::dataTableOutput("Chicktable")))
                                 ),
                         tabItem(tabName = "DataSummaries",
-                                br(),
-                                box(width = 12, title = "Data Summaries", collapsible = TRUE, 
-                                    collapsed = TRUE, 
+                                fluidRow(
+                                box(width = 12, 
+                                    title = h3(icon("table", lib = "font-awesome"), 
+                                                           strong("Data Summaries"), 
+                                               align = "center"), collapsible = TRUE, 
+                                    collapsed = TRUE, br(), br(),
                                     dataTableOutput("sumtable")), 
                                 box(width = 4, title = "Plot options", 
                                     radioButtons("plotType", "Plot type:", 
@@ -109,43 +114,11 @@ shinyUI(dashboardPage(
                                     )),
                                 box(width = 8, title = "Summary Plot", plotlyOutput("sumplot"))
                         
-                        ),
-                        tabItem(tabName = "About", box(p("text here"))))
-                       # tabBox(
-                       #         width = 12, height = "1000px",
-                       #         title = tagList(shiny::icon("balance-scale",
-                       #                                      lib = "font-awesome"),
-                       #                         strong("Explore Chicken Weight data")),
-                       #         br(),
-                #tabsetPanel(
-                               #tabPanel(
-                                      # "Raw Data", br(), h3(strong("Chicken data: Raw data")), br(),
-                                      #  DT::dataTableOutput("Chicktable")),
-                                #tabPanel(
-                                       # "Data Summaries", br(),
-                                       #         box(width = 12, title = "Data Summaries", collapsible = TRUE, 
-                                       #                                         collapsed = TRUE, 
-                                       #                                         dataTableOutput("sumtable")), 
-                                       #         box(width = 4, title = "Plot options", 
-                                       #             radioButtons("plotType", "Plot type:", 
-                                       #                          choices = c("All diets in one plot", "Plot diets separately"), 
-                                       #                          selected = c("All diets in one plot"),
-                                       #                          inline = FALSE), 
-                                       #             checkboxGroupInput("plotShow", label = "Show:", 
-                                       #                                choices = c("Scatter Plot", "Mean Lines", "Box-Whisker Plot"), 
-                                       #                                selected = c("Scatter Plot", "Mean Lines")
-                                       #             )),
-                                       #         box(width = 8, title = "Summary Plot", plotlyOutput("sumplot"))
-                                       # ),
-                              # tabPanel("About", p("text here")))
-        #))
-                               
-                               
-                        #tabPanel(tagList(icon("book", 
-                                              #                       lib = "font-awesome"),
-                                              #                  "About"))
-                                                                        
-                                                       
+                        )),
+                        tabItem(tabName = "Rhelp", box(width = 12,
+                                title = h3(icon("book"), strong("R help()"), 
+                                           align = "center"), htmlOutput("RHelp"))))
+                          
                                         
 )
 )
