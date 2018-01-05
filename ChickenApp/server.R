@@ -57,6 +57,12 @@ shinyServer(function(input, output, session) {
                                 filter(Diet %in% input$diet) %>%
                                 filter(Time %in% input$time)
                 
+                else if(input$ShowTime == 'time' && input$ShowID == 'chick' && input$ShowDiet == 'All')
+                        CW %>% 
+                                filter(between(Weight, input$rangeWgt[1], input$rangeWgt[2])) %>%
+                                filter(Chick %in% input$chick) %>%
+                                filter(Time %in% input$time) 
+                        
                 else if(input$ShowID == 'chick')
                         
                         CW %>%
